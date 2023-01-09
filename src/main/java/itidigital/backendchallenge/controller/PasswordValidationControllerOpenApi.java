@@ -1,35 +1,69 @@
 package itidigital.backendchallenge.controller;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import io.swagger.annotations.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import itidigital.backendchallenge.dto.PasswordInputDTO;
 import itidigital.backendchallenge.dto.PasswordValidationResponseDTO;
-import itidigital.backendchallenge.dto.view.Views;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 
-@Api(tags = "Password Resource")
+@Tag(name = "Password Resource")
 public interface PasswordValidationControllerOpenApi {
 
-    @ApiOperation(value = "API", tags = "Password Resource", response = PasswordValidationResponseDTO.class)
+    @Operation(summary = "Endpoint to validate passwords", tags = "Password Resource")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Valid Password", response = PasswordValidationResponseDTO.class),
-            @ApiResponse(code = 400, message = "Invalid Password", response = PasswordValidationResponseDTO.class)
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PasswordValidationResponseDTO.class), examples = {
+                            @ExampleObject(value = "{\n" +
+                                    "    \"isValid\": true\n" +
+                                    "}")
+                    })
+            }),
+            @ApiResponse(responseCode = "400", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PasswordValidationResponseDTO.class), examples = {
+                            @ExampleObject(value = "{\n" +
+                                    "    \"isValid\": false\n" +
+                                    "}")
+                    })
+            })
     })
-    @JsonView(Views.NoDetails.class)
     ResponseEntity<PasswordValidationResponseDTO> validatePassword(
-            @ApiParam(name = "Password Input", value = "Password Input", required = true)
-                    PasswordInputDTO passwordInputDTO
+            @Parameter(name = "Password Input", description = "Password Input", required = true)
+            PasswordInputDTO passwordInputDTO
     );
 
 
-    @ApiOperation(value = "Endpoint to validate passwords with validations errors details", tags = "Password Resource")
+    @Operation(summary = "Endpoint to validate passwords with validations errors details", tags = "Password Resource")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Valid Password", response = PasswordValidationResponseDTO.class),
-            @ApiResponse(code = 400, message = "Invalid Password", response = PasswordValidationResponseDTO.class)
+            @ApiResponse(responseCode = "200", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PasswordValidationResponseDTO.class), examples = {
+                            @ExampleObject(value = "{\n" +
+                                    "    \"isValid\": true,\n" +
+                                    "    \"details\": []\n" +
+                                    "}")
+                    })
+            }),
+            @ApiResponse(responseCode = "400", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, schema = @Schema(implementation = PasswordValidationResponseDTO.class), examples = {
+                            @ExampleObject(value = "{\n" +
+                                    "    \"isValid\": false,\n" +
+                                    "    \"details\": [\n" +
+                                    "        \"Password must not contains repeated characters\"\n" +
+                                    "    ]\n" +
+                                    "}")
+                    })
+            })
     })
     ResponseEntity<PasswordValidationResponseDTO> validatePasswordWithDetails(
-            @ApiParam(name = "Password Input", value = "Password Input", required = true)
-                    PasswordInputDTO passwordInputDTO
+            @Parameter(name = "Password Input", description = "Password Input", required = true)
+            PasswordInputDTO passwordInputDTO
     );
 }
