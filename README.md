@@ -3,7 +3,7 @@ Backend challenge for Itaú Digital
 
 ## Desafio
 
-Implementar uma API que retorne se uma senha é valida ou não, de acordo com uma série de regras listadas abaixo:
+Implementar uma API que retorna se uma senha é valida ou não, de acordo com uma série de regras listadas abaixo:
 - Nove ou mais caracteres
 - Ao menos 1 dígito
 - Ao menos 1 letra minúscula
